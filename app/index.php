@@ -25,7 +25,7 @@
             <option value="universidad">Universidad</option>
         </select> <br>
         Nacionalidad:
-        <input type="radio" name="nacionalidad" value="hispana">Hispana</input>
+        <input type="radio" name="nacionalidad" value="español">Español</input>
         <input type="radio" name="nacionalidad" value="otra">Otra</input><br>
         Idiomas:
         <input type="checkbox" name="idiomas[]" value="español" checked="checked">Español</input>

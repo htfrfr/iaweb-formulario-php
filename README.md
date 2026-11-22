@@ -1,114 +1,53 @@
-# Laboratorio de formularios
+## Laboratorio de formulario
+Adrián Donoso  Implementación de Aplicaciones Web
 
-Adrian Donoso - Implementacion de Aplicaciones Web
-
-Practica de formularios con php, otra vez sobre el entorno de docker con nginx
-y php-fpm de la practica del entorno.
-
-## que hay aqui
+# estructura
 
     mi-formulario-php/
-    ├── .vscode/launch.json     configuracion del debug con xdebug
+    ├── .vscode/launch.json
     ├── app/
-    │   ├── index.php           la pagina con el formulario
-    │   ├── encabezado.html     el titulo de arriba
-    │   ├── pie.html            el pie
-    │   └── crear.php           la pagina que recibe los datos
+    │   ├── index.php
+    │   ├── encabezado.html
+    │   ├── pie.html
+    │   └── crear.php
     ├── docker-compose.yml
     └── README.md
 
-## como se levanta
+# como se levanta
 
     docker compose up -d
 
-y se entra en http://localhost:8080. para pararlo `docker compose down`.
+y se entra en http://localhost:8080, para pararlo docker compose down
 
-## como funciona el codigo
+# como funciona
 
-son dos paginas, una manda los datos y la otra los recibe.
+son dos paginas, index.php pinta el formulario con el encabezado y el pie metidos con includes, y crear.php recibe los datos
 
-**index.php** pinta el formulario y de paso mete el encabezado y el pie con
-includes igual que en la practica anterior. lo importante del formulario es
-esta linea
+lo que manda los datos es esta linea
 
     <form action="crear.php" method="post">
 
-`action` dice a que pagina se le mandan los datos y `method="post"` dice que van
-en el cuerpo de la peticion y no en la url. cada campo lleva un `name` y ese
-nombre es la clave con la que luego php lo lee.
+action dice a que pagina van y post dice que van en el cuerpo y no en la url, cada campo lleva un name y ese name es la clave con la que php lo lee en $_POST
 
-**crear.php** no pinta ningun formulario, solo lee lo que le ha llegado en
-`$_POST` y lo escribe. `$_POST` es un array que rellena php solo con los datos
-que vienen del formulario, la clave es el `name` del campo
+crear.php no pinta formulario, solo lee $_POST y lo escribe, los idiomas son distintos porque el name es idiomas[] con corchetes y eso hace que php los meta todos en un array en vez de quedarse con el ultimo, por eso van con un foreach
 
-    $nombre = $_POST["nombre"];
+# lo que mas me ha gustado
 
-y para los idiomas es distinto porque el name es `idiomas[]` con corchetes. eso
-hace que php meta todos los marcados en un array en vez de quedarse solo con el
-ultimo, por eso se recorre con un foreach y se pintan en una lista.
+ver que cada campo manda una cosa distinta, el select manda el value y no el texto que se ve, los dos radio comparten name y por eso solo puedes elegir uno, y los checkbox llegan juntos en un array por los corchetes
 
-## los tipos de campo y lo que mandan
-
-- **text y password** mandan lo que escribes. el password solo se ve con puntos
-  en pantalla, pero va igual de claro que el resto
-- **select** manda el `value` de la opcion elegida, no el texto que se ve. o sea
-  manda `formacion-profesional` y no "Formación profesional"
-- **radio** los dos comparten el mismo `name` y por eso solo puedes elegir uno,
-  manda el value del que marques
-- **checkbox** cada uno manda su value y como el name acaba en `[]` llegan todos
-  juntos en un array
-
-lo he probado mandando el formulario desde el navegador con adrian, universidad,
-hispana, y español e ingles marcados, y crear.php devuelve
-
-    Se creará el usuario adrian 1234 universidad hispana adrian@ejemplo.com ejemplo.com
-    Idiomas:
-      - español
-      - inglés
-
-## lo que he visto al intentar romperlo
-
-**si no marcas nada el codigo falla por dentro aunque no se note.** mande el
-formulario sin tocar los idiomas ni la nacionalidad y la pagina sale igual, con
-la lista de idiomas vacia y sin ningun error en pantalla. pero mirando el log
-del contenedor con `docker logs php-practicas` si estaban
+y que si no marcas nada el codigo falla por dentro sin que se note, mande el formulario sin tocar los idiomas ni la nacionalidad y la pagina sale igual pero en docker logs php-practicas estaban los avisos
 
     PHP Warning:  Undefined array key "idiomas" in /app/crear.php on line 23
-    PHP Warning:  Undefined array key "nacionalidad" in /app/crear.php on line 24
     PHP Warning:  foreach() argument must be of type array|object, null given on line 32
 
-pasa porque un checkbox o un radio que no marcas no se manda, directamente no
-existe esa clave en `$_POST`, y el foreach se come un null. no se ve en el
-navegador porque esta imagen trae `display_errors` en Off y `log_errors` en On,
-asi que los avisos van al log y no a la pagina. si esto fuera de verdad habria
-que comprobar antes con `isset()` o poner `$_POST["idiomas"] ?? []`.
+un checkbox o un radio sin marcar no se manda, no existe esa clave en $_POST y el foreach se come un null, no se ve en el navegador porque esta imagen trae display_errors en Off y log_errors en On, para que no pasara habria que mirarlo antes con isset
 
-**entrando directo a crear.php sin pasar por el formulario pasa lo mismo.** si
-pones http://localhost:8080/crear.php en la barra sale la pagina con todos los
-huecos vacios y siete warnings en el log, porque un GET no trae nada en $_POST.
+# cosas que me pasaron
 
-**los datos no se filtran.** crear.php coge lo que llega y lo imprime tal cual
-con `echo`, asi que si en el nombre metes etiquetas html se van a colar en la
-pagina. para que sea seguro habria que sacarlo con `htmlspecialchars()`.
+entrando directo a crear.php por la barra del navegador salen siete avisos de esos, un get no trae nada en $_POST
 
-**la contraseña va en claro.** cuando envie el formulario desde el navegador,
-firefox me salto con el aviso de si queria guardar la contraseña, y luego
-crear.php la imprime en pantalla junto al resto. entre que esto va por http sin
-cifrar y que se escribe tal cual, de una contraseña de verdad no se hace nada
-de esto.
+crear.php imprime lo que llega tal cual con echo asi que si metes etiquetas html en el nombre se cuelan en la pagina, iria con htmlspecialchars
 
-## cosas del enunciado
+la contraseña va en claro, al enviar me salto firefox preguntando si la guardaba y luego crear.php la escribe en pantalla, con una de verdad no se hace nada de esto
 
-igual que en la practica del include, el arbol de carpetas pone `cabecera.html`
-pero el codigo hace `include("encabezado.html")`, y ademas el enunciado titula
-el fichero como `app/encabezado.php` cuando el contenido es html puro y el
-include lo pide con .html. he dejado `encabezado.html`, que es lo que busca el
-include.
-
-tambien hay que acordarse del `chmod -R o+rX .` si sale un 403 al levantarlo,
-por el umask de la maquina, esta explicado en el README de la practica del
-include.
-
-## repositorio
-
-https://github.com/htfrfr/mi-formulario-php
+el enunciado pone cabecera.html en el arbol pero el codigo hace include encabezado.html, deje el del include
