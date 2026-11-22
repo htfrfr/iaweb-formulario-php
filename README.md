@@ -15,7 +15,7 @@ Adrián Donoso  Implementación de Aplicaciones Web
 
 # como se levanta
 
-    docker compose up -d
+docker compose up -d
 
 y se entra en http://localhost:8080 y para pararlo docker compose down
 
@@ -25,7 +25,7 @@ son dos paginas index.php pinta el formulario con el encabezado y el pie metidos
 
 lo que los manda es esta linea
 
-    <form action="crear.php" method="post">
+<form action="crear.php" method="post">
 
 action dice a que pagina van y post dice que van en el cuerpo y no en la url y cada campo lleva un name que es la clave con la que php lo lee en $_POST
 
@@ -37,8 +37,8 @@ que si no marcas nada el codigo falla por dentro sin que se note
 
 mande el formulario sin tocar los idiomas ni la nacionalidad y la pagina sale igual pero en el log estaban los avisos
 
-    PHP Warning:  Undefined array key "idiomas" in /app/crear.php on line 23
-    PHP Warning:  foreach() argument must be of type array|object, null given on line 32
+PHP Warning:  Undefined array key "idiomas" in /app/crear.php on line 23
+PHP Warning:  foreach() argument must be of type array|object, null given on line 32
 
 un radio o un checkbox sin marcar no se manda y el foreach se come un null y no se ve en pantalla porque esta imagen trae display_errors en Off
 
@@ -48,17 +48,17 @@ esto es lo que mas me ha llamado la atencion porque crear.php coge lo que le lle
 
 probe a meter esto en el nombre
 
-    <b>hola</b>
+<b>hola</b>
 
 y fijate que en la pagina el hola sale en negrita o sea que el navegador se lo ha tragado como html y no como texto y ahi ya no es un fallo tonto porque si en vez del b meto un script es codigo mio corriendo en el navegador del que abra la pagina
 
 luego fui a ver por donde iria esto el dia que haya base de datos y mande esto en el nombre
 
-    ' OR '1'='1
+' OR '1'='1
 
 aqui no hay base de datos asi que no peta nada pero llega entero a crear.php sin escapar y si alguien lo pega en una consulta a mano
 
-    INSERT INTO usuarios VALUES ('$nombre')
+INSERT INTO usuarios VALUES ('$nombre')
 
 esa comilla cierra la cadena donde no toca y lo de detras ya se lo lee el motor como consulta y no como dato
 
