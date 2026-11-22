@@ -62,7 +62,7 @@ INSERT INTO usuarios VALUES ('$nombre')
 
 esa comilla cierra la cadena donde no toca y lo de detras ya se lo lee el motor como consulta y no como dato
 
-es el mismo fallo en los dos sitios me fio de lo que viene de fuera y lo pego donde sea sin tocarlo al html se le pasa htmlspecialchars y a sql se le habla con consultas preparadas
+al final es el mismo fallo en los dos lados me fio de lo que viene de fuera y lo pego tal cual para el html esta htmlspecialchars y para sql las consultas preparadas
 
 # cosas que me pasaron
 
