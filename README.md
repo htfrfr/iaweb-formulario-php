@@ -44,25 +44,25 @@ un radio o un checkbox sin marcar no se manda y el foreach se come un null y no 
 
 # seguridad
 
-crear.php mete en el echo lo que llega sin tocarlo asi que todo lo que escribas sale tal cual en la pagina
+esto es lo que mas me ha llamado la atencion porque crear.php coge lo que le llega y lo escupe con un echo sin mirarlo
 
-probe a poner esto en el nombre
+probe a meter esto en el nombre
 
     <b>hola</b>
 
-y sale en negrita o sea que ya no es texto es html mio metido en la pagina y con un script en vez del b seria codigo corriendo en el navegador de quien la abra
+y fijate que en la pagina el hola sale en negrita o sea que el navegador se lo ha tragado como html y no como texto y ahi ya no es un fallo tonto porque si en vez del b meto un script es codigo mio corriendo en el navegador del que abra la pagina
 
-aqui no hay base de datos pero el dia que estos datos entren en una consulta pegados a mano pasa lo mismo
-
-    INSERT INTO usuarios VALUES ('$nombre')
-
-probe a mandar esto en el nombre y llega entero a crear.php sin escapar
+luego fui a ver por donde iria esto el dia que haya base de datos y mande esto en el nombre
 
     ' OR '1'='1
 
-esa comilla cerraria la cadena antes de tiempo y lo de detras entraria como parte de la consulta y eso es una inyeccion sql
+aqui no hay base de datos asi que no peta nada pero llega entero a crear.php sin escapar y si alguien lo pega en una consulta a mano
 
-en los dos casos la regla es la misma el dato que viene de fuera no se pega nunca a nada se escapa con htmlspecialchars para el html y se usan consultas preparadas para sql
+    INSERT INTO usuarios VALUES ('$nombre')
+
+esa comilla cierra la cadena donde no toca y lo de detras ya se lo lee el motor como consulta y no como dato
+
+es el mismo fallo en los dos sitios me fio de lo que viene de fuera y lo pego donde sea sin tocarlo al html se le pasa htmlspecialchars y a sql se le habla con consultas preparadas
 
 # cosas que me pasaron
 

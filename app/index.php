@@ -20,9 +20,9 @@
         Educacion:
         <select name="educacion">
             <option value="sin-estudios">Sin estudios</option>
-            <option value="educacion-obligatoria" selected="selected">Educación Obligatoria</option>
+            <option value="eso">ESO</option>
             <option value="formacion-profesional">Formación profesional</option>
-            <option value="universidad">Universidad</option>
+            <option value="universidad" selected="selected">Universidad</option>
         </select> <br>
         Nacionalidad:
         <input type="radio" name="nacionalidad" value="español">Español</input>
